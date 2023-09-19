@@ -1,5 +1,6 @@
 const productModel = require("../models/productModel");
-const mongoose=require("mongoose")
+const mongoose=require("mongoose");
+const userModel = require("../models/userModel");
 // const ErrorHandler = require("../utils/errorHandler");
 
 
@@ -113,15 +114,21 @@ const getAllProducts=async(req,res,next)=>{
 //Get Single Product
 const singleProduct = async (req, res, next) => {
 
-    if(mongoose.isValidObjectId(req.params.id)){
-        const product = await productModel.findById(req.params.id);
-        if (!product) {
-            return res.status(404).send({ success: false, msg: "Product Not Found" });
+    try {
+        if(mongoose.isValidObjectId(req.params.id)){
+            const product = await productModel.findById(req.params.id);
+            if (!product) {
+                return res.status(404).send({ success: false, msg: "Product Not Found" });
+            }
+            res.status(200).send({ success: true, msg: product });
+    
+        }else{
+            return res.status(400).send({ success: false, msg: "Invalid Product ID" });        
         }
-        res.status(200).send({ success: true, msg: product });
-
-    }else{
-        return res.status(400).send({ success: false, msg: "Invalid Product ID" });        
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({success:false,msg:"Server Error"})
     }
 };
 
@@ -189,7 +196,30 @@ const deleteProduct=async(req,res,next)=>{
 
 
 
+//Products Reviews:-- Rating
+const reviews=async(req,res)=>{
+    try {
+        const {comment,rating}=req.body;
+        const {id}=req.params;
+        const product =await productModel.findById(id)
+        const userId=req.user.userId;
+        const user = await userModel.findById(userId)
+        const reviews={
+            userId,
+            name:user.name,
+            comment,
+            rating:Number(rating)
+        }
+        const updatedProduct = await product.updateOne({$push:{reviews}}, {new:true})
+        res.status(200).json({status:true, updatedProduct})
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({success:false,msg:error.message})
+    }
+}
 
 
 
-module.exports={createProduct,getAllProducts,singleProduct,updateProduct,deleteProduct,searchProduct}
+
+module.exports={createProduct,getAllProducts,singleProduct,updateProduct,deleteProduct,searchProduct,reviews}

@@ -8,19 +8,7 @@ dbConnection();
 
 //Importing Routes
 app.use(require("./Routes/productRoute"))
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.use(require("./Routes/userRoute"));
 
 
 
@@ -30,8 +18,7 @@ app.use(require("./Routes/productRoute"))
 //Importing Middlewares to Solve ERROR
 // app.use(require("./Middlewares/error"))
 
-
-const server=app.listen(process.env.PORT || 5000,()=>console.log(`Server is running on http://localhost:${process.env.PORT}`));
+const server=app.listen(process.env.PORT,()=>console.log(`Server is running on http://localhost:${process.env.PORT}`));
 
 //Unhandled Promise Rejection
 process.on("unhandledRejection",(err)=>{
