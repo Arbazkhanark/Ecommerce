@@ -197,29 +197,89 @@ const deleteProduct=async(req,res,next)=>{
 
 
 //Products Reviews:-- Rating
-const reviews=async(req,res)=>{
-    try {
-        const {comment,rating}=req.body;
-        const {id}=req.params;
-        const product =await productModel.findById(id)
-        const userId=req.user.userId;
-        const user = await userModel.findById(userId)
-        const reviews={
-            userId,
-            name:user.name,
-            comment,
-            rating:Number(rating)
-        }
-        const updatedProduct = await product.updateOne({$push:{reviews}}, {new:true})
-        res.status(200).json({status:true, updatedProduct})
+// const reviews=async(req,res)=>{
+//     try {
+//         const {comment,rating}=req.body;
+//         const {id}=req.params;
+//         const product =await productModel.findById(id)
+//         const userId=req.user.userId;
+
+//         console.log(product.reviews);
+//         const reviewsList=product.reviews;
+//         const isIdExist=reviewsList.filter((item)=>userId===item.userId)
+//         console.log("Msg: ",isIdExist);
+
+
+
+//         const user = await userModel.findById(userId)
+//         const reviews={
+//             userId,
+//             name:user.name,
+//             comment,
+//             rating:Number(rating)
+//         }
         
+//         if(isIdExist.length<0){
+//             const updatedProduct = await product.updateOne({$push:{reviews}}, {new:true})
+//             return res.status(200).json({status:true, updatedProduct})
+//         }else{
+//             const updatedProduct = await product.updateOne({$set:{reviews}}, {new:true})
+//             return res.status(200).json({status:true, updatedProduct})
+//         }
+        
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send({success:false,msg:error.message})
+//     }
+// }
+
+
+const reviews = async (req, res) => {
+    try {
+        const { comment, rating } = req.body;
+        const { id } = req.params;
+        const product = await productModel.findById(id)
+        const userId = req.user.userId;
+
+        const reviewsList = product.reviews;
+        const isExist_Index = reviewsList.findIndex((item) => userId === item.userId);
+        
+        //Calculate Rating of Reviews
+        const sumOfRating=reviewsList.reduce((acc,review)=>acc+review.rating,0);
+        let totalRating=sumOfRating/reviewsList.length;
+        totalRating=totalRating.toFixed(1)
+        product.rating=totalRating;
+
+
+        const user = await userModel.findById(userId)
+        const newReview = {
+            userId,
+            name: user.name,
+            comment,
+            rating: Number(rating)
+        }
+
+        if (isExist_Index===-1) {
+            product.reviews.push(newReview);
+        }
+
+        product.reviews[isExist_Index]=newReview;
+
+        //Calculate Number of Reviews
+        console.log("::",product.numberOfReviews);
+        product.numberOfReviews=reviewsList.length;
+        console.log(":::",product.numberOfReviews);
+
+
+        const updatedProduct = await product.save();
+        // const updatedProduct=await productModel.findByIdAndUpdate(id,{newReview})
+        return res.status(200).json({ status: true, updatedProduct });
+
     } catch (error) {
         console.log(error);
-        res.status(500).send({success:false,msg:error.message})
+        res.status(500).send({ success: false, msg: error.message })
     }
 }
-
-
 
 
 module.exports={createProduct,getAllProducts,singleProduct,updateProduct,deleteProduct,searchProduct,reviews}

@@ -19,6 +19,11 @@ const userSchema=mongoose.Schema({
         minLength:[8,"Password should be at least 8 character"],
         // select:false
     },
+    orders: [{
+        items: [String],
+        time: Date,
+        address:[String]
+    }],
     avatar:{
         public_id:{
             type:String,
