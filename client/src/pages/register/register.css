@@ -1,0 +1,26 @@
+.register{
+    border: 2px solid black;
+    text-align: center;
+}
+
+.container{
+    margin: auto;
+    text-align: center;
+    border: 1px solid black;
+    width: 60%;
+}
+
+
+.logo-img{
+    margin: auto;
+    animation: rotate 1s ease-in-out 0.1s infinite alternate both;
+}
+
+@keyframes rotate{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}

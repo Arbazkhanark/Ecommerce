@@ -1,0 +1,44 @@
+.footer-container{
+    background-color: grey;
+}
+
+.footer-content{
+    display: flex;
+    justify-content: space-around;
+    padding-top:20px ;
+}
+
+.right{
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.footer-head{
+    font-size: larger;
+    font-weight: 600;
+}
+
+a:hover{
+    color: blue;
+    text-decoration:underline;
+}
+
+
+.footer-bottom{
+    padding:20px 8px 10px 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.social-icons i{
+    width: 50px;
+    font-size: x-large;
+    cursor: pointer;
+}
+
+.social-icons i:hover{
+    color: tomato;
+}

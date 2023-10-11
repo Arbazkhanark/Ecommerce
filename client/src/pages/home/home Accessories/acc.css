@@ -1,0 +1,38 @@
+.card-container{
+    margin: 20px 10px;
+    background-color: rgba(220, 220, 220, 0.445);
+    width: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+.card-content{
+    height: 200px;
+    text-align: center;
+    padding: 20px;
+}
+
+.card-content button{
+    background-color: tomato;
+    padding: 5px 20px;
+    margin-top: 50px;
+}
+
+
+.card-content button:hover{
+    color: white;
+    text-decoration: underline;
+}
+
+
+
+.homeProducts{
+    display: flex;
+}
+
+@media only screen and (max-width: 600px) {
+     .card-content{
+      padding: 10px;
+
+    }
+  }

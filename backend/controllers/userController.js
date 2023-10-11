@@ -33,11 +33,15 @@ const register=async(req,res,next)=>{
         if(!isEmailAlready){
             const encrypt=await bcrypt.hash(password,10);
             // Node:-     require("crypto").randomBytes(32).toString('hex')
+            const verfiConfirmPassword=await bcrypt.compare(confirmPassword,encrypt);
+            if(!verfiConfirmPassword){
+                return res.status(400).send({success:false,error:"password and Confirm Password should be same"});
+            }
             const newData= new userModel({
                 name,
                 email,
                 password:encrypt,
-                role:"admin",
+                role,
                 avatar:{
                     public_id:"1224 878 98 78",
                     url:"gcvhgcfftfyu uy uy uyyu.jpg"
@@ -53,7 +57,7 @@ const register=async(req,res,next)=>{
 
     } catch (error) {
         console.log(error);
-        res.status(500).send({success:false,Error:error});
+        res.status(500).send({success:false,Error:error.message});
     }
 
 }
@@ -77,6 +81,7 @@ const login =async(req,res,next) => {
   
             if(isPasswordValid){
                 const token =jwt.sign({ userId:user._id},process.env.SECRET_KEY,{expiresIn:"10m"});
+                res.cookie("token",token,{ httpOnly: true, maxAge:12*60*1000 })
                 user.token=token;
                 await user.save();
                 return res.status(200).send({success:true,msg:"Logged In", token });

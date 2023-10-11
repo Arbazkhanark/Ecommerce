@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken')
 const verifyTokens=async(req,res,next)=>{
-    const token=req.headers.authorization.split(' ')[1]
-    // console.log(token);
-    //Bearer iuhdfiuhdsiuhfddsjfndjcvndsjinduiv
+    // const token=req.headers.authorization.split(' ')[1]
+    const token=req.cookies.token;
 
 
     try {
